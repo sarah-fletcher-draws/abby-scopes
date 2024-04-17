@@ -64,4 +64,16 @@
         if (file.type === 'text/csv') {
           const uploadTime = new Date().toLocaleString();
           const fileItem = document.createElement('li');
-          file
+          fileItem.classList.add('file-item');
+          fileItem.innerHTML = `
+            <strong>${file.name}</strong> - Uploaded at ${uploadTime}
+          `;
+          fileList.appendChild(fileItem);
+        } else {
+          alert('Please upload only CSV files.');
+        }
+      });
+    }
+  </script>
+</body>
+</html>
