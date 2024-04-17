@@ -70,10 +70,39 @@
             <strong>${file.name}</strong> - Uploaded at ${uploadTime}
           `;
           fileList.appendChild(fileItem);
+
+          // Store file data in localStorage
+          saveFileToLocalStorage(file);
         };
         reader.readAsDataURL(file);
       });
     }
+
+    function saveFileToLocalStorage(file) {
+      const fileData = {
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        lastModified: file.lastModified,
+      };
+
+      const files = JSON.parse(localStorage.getItem('uploadedFiles')) || [];
+      files.push(fileData);
+      localStorage.setItem('uploadedFiles', JSON.stringify(files));
+    }
+
+    // Display previously uploaded files on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      const files = JSON.parse(localStorage.getItem('uploadedFiles')) || [];
+      files.forEach(file => {
+        const fileItem = document.createElement('li');
+        fileItem.classList.add('file-item');
+        fileItem.innerHTML = `
+          <strong>${file.name}</strong> - Uploaded at ${new Date(file.lastModified).toLocaleString()}
+        `;
+        fileList.appendChild(fileItem);
+      });
+    });
   </script>
 </body>
 </html>
