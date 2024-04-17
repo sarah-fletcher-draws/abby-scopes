@@ -3,77 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>User Upload</title>
-<style>
-  .drop-zone {
-    border: 2px dashed #ccc;
-    border-radius: 5px;
-    padding: 20px;
-    text-align: center;
-    font-size: 1.2em;
-    cursor: pointer;
-    margin-bottom: 20px;
-  }
-  .drop-zone.drag-over {
-    border-color: #009688;
-  }
-  .file-list {
-    list-style-type: none;
-    padding: 0;
-  }
-  .file-item {
-    margin-bottom: 5px;
-  }
-</style>
+<title>File Upload</title>
 </head>
 <body>
-  <h1>User Upload</h1>
-  <div id="dropZone" class="drop-zone">
-    <p>Drag and drop CSV files here or click to browse</p>
-    <input type="file" id="fileInput" accept=".csv" style="display: none;" multiple>
-  </div>
-  <ul id="fileList" class="file-list"></ul>
-
-  <script>
-    const dropZone = document.getElementById('dropZone');
-    const fileList = document.getElementById('fileList');
-
-    dropZone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dropZone.classList.add('drag-over');
-    });
-
-    dropZone.addEventListener('dragleave', () => {
-      dropZone.classList.remove('drag-over');
-    });
-
-    dropZone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dropZone.classList.remove('drag-over');
-      const files = e.dataTransfer.files;
-      handleFiles(files);
-    });
-
-    document.getElementById('fileInput').addEventListener('change', (e) => {
-      const files = e.target.files;
-      handleFiles(files);
-    });
-
-    function handleFiles(files) {
-      Array.from(files).forEach(file => {
-        if (file.type === 'text/csv') {
-          const uploadTime = new Date().toLocaleString();
-          const fileItem = document.createElement('li');
-          fileItem.classList.add('file-item');
-          fileItem.innerHTML = `
-            <strong>${file.name}</strong> - Uploaded at ${uploadTime}
-          `;
-          fileList.appendChild(fileItem);
-        } else {
-          alert('Please upload only CSV files.');
-        }
-      });
-    }
-  </script>
+  <h1>Upload Files</h1>
+  <form action="https://github.com/username/repo-name/upload/main" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" id="fileInput" multiple>
+    <button type="submit">Upload</button>
+  </form>
 </body>
 </html>
