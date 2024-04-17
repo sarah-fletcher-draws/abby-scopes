@@ -70,27 +70,9 @@
             <strong>${file.name}</strong> - Uploaded at ${uploadTime}
           `;
           fileList.appendChild(fileItem);
-
-          // Upload file to server (GitHub repository)
-          uploadFile(file);
         };
         reader.readAsDataURL(file);
       });
-    }
-
-    function uploadFile(file) {
-      const reader = new FileReader();
-      reader.onload = function () {
-        const folderName = 'user1'; // Replace with user-specific folder name
-        const filePath = `uploads/${folderName}/${file.name}`;
-
-        // Perform AJAX or fetch request to upload file to server (GitHub repository)
-        // For simplicity, this example does not include actual file upload functionality to GitHub.
-
-        // Simulate upload success message
-        console.log(`File '${file.name}' uploaded successfully to '${filePath}'`);
-      };
-      reader.readAsDataURL(file);
     }
   </script>
 </body>
