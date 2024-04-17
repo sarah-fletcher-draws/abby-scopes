@@ -1,0 +1,8 @@
+- team-file-upload
+  - public
+    - index.html
+    - style.css
+    - script.js
+  - uploads
+  - server.js
+  - package.json
