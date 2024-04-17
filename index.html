@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Drag and Drop File Upload</title>
+<title>User Upload</title>
 <style>
   .drop-zone {
     border: 2px dashed #ccc;
@@ -12,89 +12,86 @@
     text-align: center;
     font-size: 1.2em;
     cursor: pointer;
+    margin-bottom: 20px;
   }
   .drop-zone.drag-over {
     border-color: #009688;
   }
+  .file-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  .file-item {
+    margin-bottom: 5px;
+  }
 </style>
 </head>
 <body>
-  <h1>Drag and Drop File Upload</h1>
+  <h1>User Upload</h1>
   <div id="dropZone" class="drop-zone">
     <p>Drag and drop files here or click to browse</p>
     <input type="file" id="fileInput" style="display: none;" multiple>
   </div>
-  <div id="fileList"></div>
+  <ul id="fileList" class="file-list"></ul>
 
   <script>
     const dropZone = document.getElementById('dropZone');
     const fileList = document.getElementById('fileList');
 
-    // Prevent default drag behaviors
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-      dropZone.addEventListener(eventName, preventDefaults, false);
-      document.body.addEventListener(eventName, preventDefaults, false);
-    });
-
-    // Highlight drop zone when a file is dragged over it
-    ['dragenter', 'dragover'].forEach(eventName => {
-      dropZone.addEventListener(eventName, highlight, false);
-    });
-
-    // Unhighlight drop zone when a file is dragged away
-    ['dragleave', 'drop'].forEach(eventName => {
-      dropZone.addEventListener(eventName, unhighlight, false);
-    });
-
-    // Handle dropped files
-    dropZone.addEventListener('drop', handleDrop, false);
-
-    function preventDefaults(e) {
+    dropZone.addEventListener('dragover', (e) => {
       e.preventDefault();
-      e.stopPropagation();
-    }
-
-    function highlight() {
       dropZone.classList.add('drag-over');
-    }
-
-    function unhighlight() {
-      dropZone.classList.remove('drag-over');
-    }
-
-    function handleDrop(e) {
-      const dt = e.dataTransfer;
-      const files = dt.files;
-
-      handleFiles(files);
-    }
-
-    function handleFiles(files) {
-      files.forEach(uploadFile);
-    }
-
-    function uploadFile(file) {
-      const reader = new FileReader();
-
-      reader.onload = function (e) {
-        const fileItem = document.createElement('div');
-        fileItem.textContent = file.name;
-        fileList.appendChild(fileItem);
-      };
-
-      reader.readAsDataURL(file);
-    }
-
-    // Allow file selection by clicking on the drop zone
-    dropZone.addEventListener('click', () => {
-      document.getElementById('fileInput').click();
     });
 
-    // Handle file selection via file input
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('drag-over');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('drag-over');
+      const files = e.dataTransfer.files;
+      handleFiles(files);
+    });
+
     document.getElementById('fileInput').addEventListener('change', (e) => {
       const files = e.target.files;
       handleFiles(files);
     });
+
+    function handleFiles(files) {
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const uploadTime = new Date().toLocaleString();
+          const fileItem = document.createElement('li');
+          fileItem.classList.add('file-item');
+          fileItem.innerHTML = `
+            <strong>${file.name}</strong> - Uploaded at ${uploadTime}
+          `;
+          fileList.appendChild(fileItem);
+
+          // Upload file to server (GitHub repository)
+          uploadFile(file);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function uploadFile(file) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        const folderName = 'user1'; // Replace with user-specific folder name
+        const filePath = `uploads/${folderName}/${file.name}`;
+
+        // Perform AJAX or fetch request to upload file to server (GitHub repository)
+        // For simplicity, this example does not include actual file upload functionality to GitHub.
+
+        // Simulate upload success message
+        console.log(`File '${file.name}' uploaded successfully to '${filePath}'`);
+      };
+      reader.readAsDataURL(file);
+    }
   </script>
 </body>
 </html>
